@@ -560,7 +560,16 @@ textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
           <label>N° de proforma <span style="color:var(--gold);font-size:10px;font-weight:400">(automático)</span></label>
           <div style="display:flex;gap:6px;align-items:center">
             <input type="text" id="proforma" readonly style="background:var(--gray-200);cursor:default;font-weight:700;color:#c9871a;flex:1;min-width:0">
+            <button onclick="editarNumero()" title="Ajustar número" style="background:var(--gold);border:none;border-radius:var(--radius);color:#fff;font-size:12px;padding:0 10px;height:38px;cursor:pointer;white-space:nowrap;font-family:'Barlow',sans-serif;flex-shrink:0">✏️ Ajustar</button>
             <button onclick="verHistorial()" title="Ver historial de proformas" style="background:var(--dark);border:none;border-radius:var(--radius);color:var(--gold);font-size:12px;padding:0 10px;height:38px;cursor:pointer;white-space:nowrap;font-family:'Barlow',sans-serif;flex-shrink:0">📋 Historial</button>
+          </div>
+          <div id="ajuste-box" style="display:none;margin-top:8px;background:#fffbf0;border:1.5px solid var(--gold);border-radius:var(--radius);padding:10px 12px;">
+            <div style="font-size:11px;color:#888;margin-bottom:6px;">¿Cuál fue el último número de proforma que usó? El siguiente será ese + 1.</div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input type="text" id="ajuste-input" placeholder="Ej. 001542" style="flex:1;font-weight:700;text-align:center;font-size:15px;">
+              <button onclick="aplicarAjuste()" style="background:var(--dark);border:none;border-radius:var(--radius);color:#fff;font-size:13px;font-weight:700;padding:0 14px;height:36px;cursor:pointer;font-family:'Barlow',sans-serif;">Aplicar</button>
+              <button onclick="cancelarAjuste()" style="background:none;border:1px solid #ddd;border-radius:var(--radius);color:#888;font-size:13px;padding:0 10px;height:36px;cursor:pointer;font-family:'Barlow',sans-serif;">Cancelar</button>
+            </div>
           </div>
         </div>
       </div>
@@ -682,25 +691,58 @@ let trabajos = [];
 let notas = [];
 let saveTimer = null;
 
+// ── JSONBIN CONFIG ────────────────────────────────────────────────────────────
+const BIN_ID = '6a0f8839ee5a733b12fb1448';
+const API_KEY = '$2a$10$HkebJDZBBWt25G8u3XTg3u/P85gjKyovsf7bpCsgBUEUQTdinGtRq';
+const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
 // ── PROFORMA AUTO-INCREMENTO ─────────────────────────────────────────────────
-function getUltimaProforma() {
-  return parseInt(localStorage.getItem('sojifam_ultima_proforma') || '1538', 10);
-}
-function getSiguienteProforma() {
-  const siguiente = getUltimaProforma() + 1;
-  return siguiente;
-}
 function formatProforma(n) {
   return String(n).padStart(6, '0');
 }
-function asignarNuevaProforma() {
-  const num = getSiguienteProforma();
-  document.getElementById('proforma').value = formatProforma(num);
+
+async function asignarNuevaProforma() {
+  document.getElementById('proforma').value = 'Cargando...';
+  try {
+    const res = await fetch(BIN_URL + '/latest', {
+      method: 'GET',
+      headers: {
+        'X-Master-Key': API_KEY,
+        'X-Bin-Meta': 'false'
+      }
+    });
+    if (!res.ok) throw new Error('Error ' + res.status);
+    const data = await res.json();
+    const ultima = data.ultima_proforma || 0;
+    const siguiente = ultima + 1;
+    document.getElementById('proforma').value = formatProforma(siguiente);
+  } catch(e) {
+    console.error('JSONBin error:', e);
+    const local = parseInt(localStorage.getItem('sojifam_ultima_proforma') || '0', 10);
+    document.getElementById('proforma').value = formatProforma(local + 1);
+    document.getElementById('proforma').title = 'Modo sin conexión — sincronizará cuando haya internet';
+  }
 }
-function confirmarProforma() {
+
+async function confirmarProforma() {
   const num = parseInt(document.getElementById('proforma').value, 10);
+  if (isNaN(num)) return;
   localStorage.setItem('sojifam_ultima_proforma', String(num));
   guardarEnHistorial(num);
+  try {
+    const res = await fetch(BIN_URL, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': API_KEY,
+        'X-Bin-Meta': 'false'
+      },
+      body: JSON.stringify({ ultima_proforma: num })
+    });
+    if (!res.ok) throw new Error('Error ' + res.status);
+  } catch(e) {
+    console.warn('No se pudo actualizar en la nube, guardado localmente.');
+  }
 }
 function guardarEnHistorial(num) {
   const historial = getHistorial();
@@ -718,6 +760,42 @@ function getHistorial() {
 }
 
 // ── MODAL HISTORIAL ───────────────────────────────────────────────────────────
+function editarNumero() {
+  const box = document.getElementById('ajuste-box');
+  box.style.display = box.style.display === 'none' ? 'block' : 'none';
+  if (box.style.display === 'block') {
+    document.getElementById('ajuste-input').value = document.getElementById('proforma').value;
+    document.getElementById('ajuste-input').focus();
+    document.getElementById('ajuste-input').select();
+  }
+}
+async function aplicarAjuste() {
+  const val = document.getElementById('ajuste-input').value.trim();
+  const num = parseInt(val, 10);
+  if (isNaN(num) || num < 0) { alert('Ingrese un número válido.'); return; }
+  localStorage.setItem('sojifam_ultima_proforma', String(num));
+  try {
+    const res = await fetch(BIN_URL, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': API_KEY,
+        'X-Bin-Meta': 'false'
+      },
+      body: JSON.stringify({ ultima_proforma: num })
+    });
+    if (!res.ok) throw new Error('Error ' + res.status);
+    document.getElementById('proforma').value = formatProforma(num + 1);
+    document.getElementById('ajuste-box').style.display = 'none';
+  } catch(e) {
+    document.getElementById('proforma').value = formatProforma(num + 1);
+    document.getElementById('ajuste-box').style.display = 'none';
+    console.warn('Guardado solo localmente.');
+  }
+}
+function cancelarAjuste() {
+  document.getElementById('ajuste-box').style.display = 'none';
+}
 function verHistorial() {
   const h = getHistorial();
   const lista = document.getElementById('historial-lista');
@@ -1023,3 +1101,4 @@ if (notas.length === 0) {
 </script>
 </body>
 </html>
+
