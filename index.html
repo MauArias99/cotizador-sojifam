@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SOJIFAM — Cotizaciones</title>
+<title>SOJIFAM — Generador de Cotizaciones</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
 <style>
 :root {
-  --gold: #F5A623;
-  --gold-dark: #c9871a;
+  --gold: #F2B300;
+  --gold-dark: #c99400;
   --dark: #111111;
   --dark2: #1e1e1e;
   --white: #ffffff;
@@ -527,6 +527,16 @@ textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
 </head>
 <body>
 
+<script>
+// Abrir en pantalla completa al cargar en escritorio
+if (window.innerWidth > 768) {
+  const el = document.documentElement;
+  if (el.requestFullscreen) el.requestFullscreen();
+  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+  else if (el.msRequestFullscreen) el.msRequestFullscreen();
+}
+</script>
+
 <div class="topbar">
   <div>
     <div class="topbar-logo">SOJI<span>FAM</span></div>
@@ -627,6 +637,14 @@ textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
             <input type="text" id="iva-monto" class="monto-input readonly" readonly placeholder="0,00" style="max-width:100px">
           </div>
         </div>
+        <div class="monto-row">
+          <span class="monto-lbl">Tipo de servicio</span>
+          <select id="tipo-servicio" class="monto-sel" onchange="autoguardar()" style="max-width:180px">
+            <option value="mano_obra_materiales">Mano de obra y materiales</option>
+            <option value="solo_materiales">Solo materiales</option>
+            <option value="solo_mano_obra">Solo mano de obra</option>
+          </select>
+        </div>
         <div class="monto-divider"></div>
         <div class="monto-total-row">
           <span class="monto-total-lbl">Total a cancelar</span>
@@ -660,7 +678,7 @@ textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
     <div id="cot-output" style="display:none">
       <div class="cotizacion" id="cot-doc"></div>
       <div class="print-actions">
-        <button class="btn-print" onclick="window.print()">🖨 Imprimir / Guardar PDF</button>
+        <button class="btn-print" onclick="imprimirConNombre()">🖨 Imprimir / Guardar PDF</button>
       </div>
     </div>
   </div>
@@ -695,6 +713,16 @@ let saveTimer = null;
 const BIN_ID = '6a0f8839ee5a733b12fb1448';
 const API_KEY = '$2a$10$HkebJDZBBWt25G8u3XTg3u/P85gjKyovsf7bpCsgBUEUQTdinGtRq';
 const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
+
+// ── IMPRIMIR CON NOMBRE ──────────────────────────────────────────────────────
+function imprimirConNombre() {
+  const cliente = document.getElementById('cliente').value || 'Cliente';
+  const nombreArchivo = 'Sojifam - ' + cliente;
+  const titleOriginal = document.title;
+  document.title = nombreArchivo;
+  window.print();
+  setTimeout(() => { document.title = titleOriginal; }, 1000);
+}
 
 // ── PROFORMA AUTO-INCREMENTO ─────────────────────────────────────────────────
 function formatProforma(n) {
@@ -804,7 +832,7 @@ function verHistorial() {
   } else {
     lista.innerHTML = h.map(e => `
       <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f0f0f0;">
-        <div style="background:#F5A623;color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;padding:4px 10px;border-radius:4px;flex-shrink:0">${e.num}</div>
+        <div style="background:#F2B300;color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;padding:4px 10px;border-radius:4px;flex-shrink:0">${e.num}</div>
         <div style="flex:1;min-width:0">
           <div style="font-weight:600;font-size:13px;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(e.cliente)}</div>
           <div style="font-size:11px;color:#888">${esc(e.fecha)}</div>
@@ -928,6 +956,7 @@ function autoguardar() {
       validez: document.getElementById('validez').value,
       subtotal: document.getElementById('subtotal').value,
       ivaPct: document.getElementById('iva-pct').value,
+      tipoServicio: document.getElementById('tipo-servicio').value,
       trabajos: trabajos,
       notas: notas,
     };
@@ -948,6 +977,7 @@ function cargarGuardado() {
     document.getElementById('validez').value = d.validez || '15 días hábiles';
     document.getElementById('subtotal').value = d.subtotal || '';
     document.getElementById('iva-pct').value = d.ivaPct || '13';
+    document.getElementById('tipo-servicio').value = d.tipoServicio || 'mano_obra_materiales';
     trabajos = d.trabajos || [];
     notas = d.notas || [];
     renderTrabajos();
@@ -966,6 +996,7 @@ function limpiarTodo() {
   document.getElementById('iva-pct').value = '13';
   document.getElementById('iva-monto').value = '';
   document.getElementById('total-display').textContent = '₡ 0,00';
+  document.getElementById('tipo-servicio').value = 'mano_obra_materiales';
   trabajos = [];
   notas = [];
   renderTrabajos();
@@ -980,6 +1011,16 @@ function limpiarTodo() {
   document.getElementById(id).addEventListener('input', autoguardar);
 });
 
+// ── ETIQUETA TIPO SERVICIO ────────────────────────────────────────────────────
+function labelTipoServicio(val) {
+  const map = {
+    'mano_obra_materiales': 'Mano de obra y materiales',
+    'solo_materiales': 'Solo materiales',
+    'solo_mano_obra': 'Solo mano de obra'
+  };
+  return map[val] || 'Mano de obra y materiales';
+}
+
 // ── GENERAR VISTA ─────────────────────────────────────────────────────────────
 function generarVista() {
   confirmarProforma();
@@ -991,6 +1032,8 @@ function generarVista() {
   const pct = parseFloat(document.getElementById('iva-pct').value) || 0;
   const iva = sub * pct / 100;
   const total = sub + iva;
+  const tipoServicio = document.getElementById('tipo-servicio').value;
+  const tipoLabel = labelTipoServicio(tipoServicio);
 
   const filasTrab = trabajos.length
     ? trabajos.map((t, i) => `
@@ -1044,7 +1087,7 @@ function generarVista() {
     <div class="cot-section" style="margin-top:2px">Resumen económico</div>
     <table class="cot-resumen">
       <tr><th>Descripción</th><th>Monto</th></tr>
-      <tr><td>Subtotal — mano de obra y materiales</td><td>₡ ${fmt(sub)}</td></tr>
+      <tr><td>Subtotal — ${esc(tipoLabel)}</td><td>₡ ${fmt(sub)}</td></tr>
       ${ivaRow}
       <tr class="total-row"><td>Total a cancelar</td><td>₡ ${fmt(total)}</td></tr>
     </table>
