@@ -19,18 +19,13 @@
   --text: #1a1a1a;
   --radius: 6px;
 }
-
 * { box-sizing: border-box; margin: 0; padding: 0; }
-
 body {
   font-family: 'Barlow', sans-serif;
   background: #f0ede8;
   color: var(--text);
-  width: 100%;
-  height: 100%;
+  min-height: 100vh;
 }
-
-/* ── TOP BAR ── */
 .topbar {
   background: var(--dark);
   padding: 0 2rem;
@@ -43,481 +38,112 @@ body {
   z-index: 100;
   border-bottom: 3px solid var(--gold);
 }
-.topbar-logo {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 900;
-  font-size: 22px;
-  color: var(--white);
-  letter-spacing: 1px;
-}
+.topbar-logo { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 22px; color: var(--white); letter-spacing: 1px; }
 .topbar-logo span { color: var(--gold); }
-.topbar-sub {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-size: 11px;
-  color: var(--gray-400);
-  letter-spacing: 3px;
-  text-transform: uppercase;
-}
-.saved-badge {
-  font-size: 12px;
-  color: var(--gold);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  opacity: 0;
-  transition: opacity 0.4s;
-}
+.topbar-sub { font-family: 'Barlow Condensed', sans-serif; font-size: 11px; color: var(--gray-400); letter-spacing: 3px; text-transform: uppercase; }
+.saved-badge { font-size: 12px; color: var(--gold); display: flex; align-items: center; gap: 6px; opacity: 0; transition: opacity 0.4s; }
 .saved-badge.show { opacity: 1; }
-
-/* ── LAYOUT ── */
 .app {
   display: grid;
-  grid-template-columns: 75% 25%;
+  grid-template-columns: 1fr;
   height: calc(100vh - 56px);
   width: 100vw;
   gap: 0;
   overflow: hidden;
 }
-
-/* ── PANEL IZQUIERDO (FORMULARIO) ── */
-.panel-form {
-  background: var(--white);
-  border-right: 1px solid var(--gray-200);
-  overflow-y: auto;
-  height: 100%;
-}
-
+.panel-preview { display: none !important; }
+.panel-form { background: var(--white); border-right: 1px solid var(--gray-200); overflow-y: auto; height: 100%; }
 .panel-inner { padding: 1.5rem; }
-
-.sec-head {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 1.4rem 0 0.8rem;
-}
+.sec-head { display: flex; align-items: center; gap: 10px; margin: 1.4rem 0 0.8rem; }
 .sec-head:first-child { margin-top: 0; }
-.sec-dot {
-  width: 10px; height: 10px;
-  background: var(--gold);
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.sec-label {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
-  font-size: 13px;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--gray-600);
-}
-.sec-line {
-  flex: 1;
-  height: 1px;
-  background: var(--gray-200);
-}
-
+.sec-dot { width: 10px; height: 10px; background: var(--gold); border-radius: 50%; flex-shrink: 0; }
+.sec-label { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 13px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gray-600); }
+.sec-line { flex: 1; height: 1px; background: var(--gray-200); }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; }
 .field-row.full { grid-template-columns: 1fr; }
-
-.field label {
-  display: block;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--gray-600);
-  margin-bottom: 5px;
-}
-
-input[type=text], textarea, select {
-  width: 100%;
-  padding: 9px 11px;
-  font-size: 14px;
-  font-family: 'Barlow', sans-serif;
-  border: 1.5px solid var(--gray-200);
-  border-radius: var(--radius);
-  background: var(--gray-100);
-  color: var(--text);
-  transition: border-color 0.2s, background 0.2s;
-  outline: none;
-}
-input[type=text]:focus, textarea:focus, select:focus {
-  border-color: var(--gold);
-  background: #fffdf7;
-}
+.field label { display: block; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--gray-600); margin-bottom: 5px; }
+input[type=text], textarea, select { width: 100%; padding: 9px 11px; font-size: 14px; font-family: 'Barlow', sans-serif; border: 1.5px solid var(--gray-200); border-radius: var(--radius); background: var(--gray-100); color: var(--text); transition: border-color 0.2s, background 0.2s; outline: none; }
+input[type=text]:focus, textarea:focus, select:focus { border-color: var(--gold); background: #fffdf7; }
 textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
-
-/* ── ITEM CARDS ── */
-.item-card {
-  background: var(--gray-100);
-  border: 1.5px solid var(--gray-200);
-  border-radius: var(--radius);
-  padding: 12px;
-  margin-bottom: 8px;
-  position: relative;
-}
-.item-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-.item-badge {
-  background: var(--gold);
-  color: var(--white);
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
-  font-size: 13px;
-  padding: 2px 10px;
-  border-radius: 3px;
-  letter-spacing: 0.5px;
-}
-.btn-del {
-  margin-left: auto;
-  background: none;
-  border: 1px solid var(--gray-200);
-  border-radius: 4px;
-  cursor: pointer;
-  color: var(--gray-400);
-  font-size: 16px;
-  width: 28px; height: 28px;
-  display: flex; align-items: center; justify-content: center;
-  transition: all 0.15s;
-}
+.item-card { background: var(--gray-100); border: 1.5px solid var(--gray-200); border-radius: var(--radius); padding: 12px; margin-bottom: 8px; position: relative; }
+.item-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.item-badge { background: var(--gold); color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 13px; padding: 2px 10px; border-radius: 3px; letter-spacing: 0.5px; }
+.btn-del { margin-left: auto; background: none; border: 1px solid var(--gray-200); border-radius: 4px; cursor: pointer; color: var(--gray-400); font-size: 16px; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
 .btn-del:hover { border-color: #e74c3c; color: #e74c3c; background: #fff0f0; }
-
 .item-fields { display: grid; grid-template-columns: 1fr 1.8fr; gap: 8px; }
-
-.btn-add {
-  width: 100%;
-  padding: 9px;
-  border: 1.5px dashed var(--gray-400);
-  background: none;
-  border-radius: var(--radius);
-  color: var(--gray-600);
-  font-family: 'Barlow', sans-serif;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  margin-bottom: 0.5rem;
-  transition: all 0.15s;
-}
+.btn-add { width: 100%; padding: 9px; border: 1.5px dashed var(--gray-400); background: none; border-radius: var(--radius); color: var(--gray-600); font-family: 'Barlow', sans-serif; font-size: 13px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 0.5rem; transition: all 0.15s; }
 .btn-add:hover { border-color: var(--gold); color: var(--gold); background: #fffbf0; }
-
-/* ── MONTO ── */
-.monto-box {
-  background: var(--dark);
-  border-radius: var(--radius);
-  padding: 16px;
-  margin-bottom: 1rem;
-}
-.monto-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
-  gap: 8px;
-}
-.monto-lbl {
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  color: var(--gray-400);
-}
-.monto-input {
-  text-align: right;
-  max-width: 160px;
-  background: #2a2a2a !important;
-  border-color: #3a3a3a !important;
-  color: var(--white) !important;
-  font-weight: 600;
-}
+.monto-box { background: var(--dark); border-radius: var(--radius); padding: 16px; margin-bottom: 1rem; }
+.monto-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; gap: 8px; }
+.monto-lbl { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--gray-400); }
+.monto-input { text-align: right; max-width: 160px; background: #2a2a2a !important; border-color: #3a3a3a !important; color: var(--white) !important; font-weight: 600; }
 .monto-input:focus { border-color: var(--gold) !important; background: #222 !important; }
-.monto-input.readonly {
-  background: #222 !important;
-  color: var(--gray-400) !important;
-  cursor: default;
-}
-.monto-sel {
-  background: #2a2a2a !important;
-  border-color: #3a3a3a !important;
-  color: var(--white) !important;
-  max-width: 110px;
-}
+.monto-input.readonly { background: #222 !important; color: var(--gray-400) !important; cursor: default; }
+.monto-sel { background: #2a2a2a !important; border-color: #3a3a3a !important; color: var(--white) !important; max-width: 110px; }
 .monto-divider { border: none; border-top: 1px solid #2e2e2e; margin: 8px 0; }
-.monto-total-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.monto-total-lbl {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
-  font-size: 15px;
-  letter-spacing: 1px;
-  color: var(--white);
-  text-transform: uppercase;
-}
-.monto-total-val {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 900;
-  font-size: 22px;
-  color: var(--gold);
-}
-
-.btn-generate {
-  width: 100%;
-  padding: 14px;
-  background: var(--gold);
-  color: var(--white);
-  border: none;
-  border-radius: var(--radius);
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
-  font-size: 17px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background 0.15s, transform 0.1s;
-}
+.monto-total-row { display: flex; justify-content: space-between; align-items: center; }
+.monto-total-lbl { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 1px; color: var(--white); text-transform: uppercase; }
+.monto-total-val { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 22px; color: var(--gold); }
+.btn-generate { width: 100%; padding: 14px; background: var(--gold); color: var(--white); border: none; border-radius: var(--radius); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: background 0.15s, transform 0.1s; }
 .btn-generate:hover { background: var(--gold-dark); }
 .btn-generate:active { transform: scale(0.99); }
-
-/* ── PANEL DERECHO (VISTA PREVIA) ── */
-.panel-preview {
-  padding: 2rem;
-  overflow-y: auto;
-  height: 100%;
-}
-
-.preview-hint {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  color: var(--gray-400);
-  text-align: center;
-  gap: 12px;
-}
+.panel-preview { padding: 2rem; overflow-y: auto; height: 100%; }
+.preview-hint { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: var(--gray-400); text-align: center; gap: 12px; }
 .preview-hint svg { opacity: 0.3; }
 .preview-hint p { font-size: 14px; }
-
-/* ── COTIZACIÓN IMPRIMIBLE ── */
-.cotizacion {
-  background: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 4px 32px rgba(0,0,0,0.12);
-  max-width: 760px;
-  margin: 0 auto;
-  font-family: Arial, sans-serif;
-}
-
-.cot-header {
-  padding: 22px 24px 14px;
-  border-bottom: 4px solid var(--gold);
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-}
-.cot-logo-txt .big {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 900;
-  font-size: 28px;
-  color: #111;
-  letter-spacing: 1px;
-  line-height: 1;
-}
+.cotizacion { background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 32px rgba(0,0,0,0.12); max-width: 760px; margin: 0 auto; font-family: Arial, sans-serif; }
+.cot-header { padding: 22px 24px 14px; border-bottom: 4px solid var(--gold); display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.cot-logo-txt .big { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 28px; color: #111; letter-spacing: 1px; line-height: 1; }
 .cot-logo-txt .big span { color: var(--gold); }
 .cot-logo-txt .line { width: 100%; height: 1.5px; background: #111; margin: 3px 0; position: relative; }
-.cot-logo-txt .line::after {
-  content: '⚙';
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  background: white;
-  padding: 0 4px;
-  font-size: 10px;
-  color: #555;
-}
-.cot-logo-txt .remo {
-  font-size: 8px;
-  letter-spacing: 4px;
-  color: #888;
-  text-transform: uppercase;
-  text-align: center;
-  display: block;
-  margin-top: 2px;
-}
+.cot-logo-txt .line::after { content: '\2699'; position: absolute; left: 50%; transform: translateX(-50%) translateY(-50%); background: white; padding: 0 4px; font-size: 10px; color: #555; }
+.cot-logo-txt .remo { font-size: 8px; letter-spacing: 4px; color: #888; text-transform: uppercase; text-align: center; display: block; margin-top: 2px; }
 .cot-title-right { text-align: right; }
-.cot-title-right h1 {
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 900;
-  font-size: 22px;
-  color: #111;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-.cot-title-right .subtitle {
-  font-size: 10px;
-  color: #888;
-  font-style: italic;
-  margin-top: 2px;
-}
-
-.cot-info-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  border-bottom: 1px solid #e0e0e0;
-}
-.cot-cell {
-  padding: 10px 16px;
-  border: 0.5px solid #e0e0e0;
-  font-size: 11px;
-}
+.cot-title-right h1 { font-family: 'Barlow Condensed', sans-serif; font-weight: 900; font-size: 22px; color: #111; letter-spacing: 0.5px; text-transform: uppercase; }
+.cot-title-right .subtitle { font-size: 10px; color: #888; font-style: italic; margin-top: 2px; }
+.cot-info-grid { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid #e0e0e0; }
+.cot-cell { padding: 10px 16px; border: 0.5px solid #e0e0e0; font-size: 11px; }
 .cot-cell .cl { color: #999; font-size: 9px; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 3px; }
 .cot-cell .cv { font-weight: 700; color: #111; font-size: 13px; }
-
-.cot-section {
-  background: #111;
-  color: white;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
-  font-size: 12px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 8px 16px;
-  margin-top: 2px;
-}
-
-.cot-tbl {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 11px;
-}
-.cot-tbl th {
-  background: var(--gold);
-  color: white;
-  padding: 8px 12px;
-  text-align: left;
-  font-weight: 700;
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-.cot-tbl td {
-  padding: 8px 12px;
-  border: 0.5px solid #e8e8e8;
-  color: #222;
-  vertical-align: top;
-}
+.cot-section { background: #111; color: white; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 2px; text-transform: uppercase; padding: 8px 16px; margin-top: 2px; }
+.cot-tbl { width: 100%; border-collapse: collapse; font-size: 11px; }
+.cot-tbl th { background: var(--gold); color: white; padding: 8px 12px; text-align: left; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+.cot-tbl td { padding: 8px 12px; border: 0.5px solid #e8e8e8; color: #222; vertical-align: top; }
 .cot-tbl tr:nth-child(even) td { background: #f9f9f9; }
 .cot-num-gold { color: var(--gold); font-weight: 700; font-family: 'Barlow Condensed', sans-serif; font-size: 13px; }
-
 .cot-nota-tbl { width: 100%; border-collapse: collapse; font-size: 11px; }
 .cot-nota-tbl td { padding: 9px 14px; border: 0.5px solid #e8e8e8; vertical-align: top; }
 .cot-nota-tbl tr:nth-child(even) td { background: #f9f9f9; }
 .nota-titulo { font-weight: 700; color: #111; }
-.nota-titulo::before { content: '■ '; color: var(--gold); }
+.nota-titulo::before { content: '\25A0 '; color: var(--gold); }
 .nota-desc { font-style: italic; color: #555; line-height: 1.5; }
-
 .cot-resumen { width: 100%; border-collapse: collapse; font-size: 12px; }
 .cot-resumen th { background: var(--gold); color: white; padding: 8px 14px; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
 .cot-resumen th:last-child { text-align: right; }
 .cot-resumen td { padding: 9px 14px; border: 0.5px solid #e8e8e8; color: #222; }
 .cot-resumen td:last-child { text-align: right; font-weight: 600; }
-.cot-resumen .total-row td {
-  background: #111;
-  color: white;
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
-  font-size: 14px;
-  letter-spacing: 0.5px;
-}
+.cot-resumen .total-row td { background: #111; color: white; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 0.5px; }
 .cot-resumen .total-row td:last-child { color: var(--gold); }
-
-.cot-text-box {
-  padding: 12px 16px;
-  font-size: 10.5px;
-  color: #333;
-  line-height: 1.6;
-  border-top: 0.5px solid #e8e8e8;
-}
-.cot-text-box::before { content: '■  '; color: var(--gold); font-size: 11px; }
-
-.cot-closing {
-  padding: 12px 20px;
-  font-size: 9.5px;
-  color: #666;
-  font-style: italic;
-  text-align: center;
-  line-height: 1.6;
-  border-top: 0.5px solid #e8e8e8;
-}
-
-.cot-firmas {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  padding: 20px 30px;
-  gap: 30px;
-  border-top: 0.5px solid #e8e8e8;
-}
+.cot-text-box { padding: 12px 16px; font-size: 10.5px; color: #333; line-height: 1.6; border-top: 0.5px solid #e8e8e8; }
+.cot-text-box::before { content: '\25A0  '; color: var(--gold); font-size: 11px; }
+.cot-closing { padding: 12px 20px; font-size: 9.5px; color: #666; font-style: italic; text-align: center; line-height: 1.6; border-top: 0.5px solid #e8e8e8; }
+.cot-firmas { display: grid; grid-template-columns: 1fr 1fr; padding: 20px 30px; gap: 30px; border-top: 0.5px solid #e8e8e8; }
 .firma-blk { text-align: center; }
 .firma-linea { border-bottom: 1px solid #333; margin-bottom: 8px; height: 36px; }
 .firma-n { font-size: 11px; font-weight: 700; color: #111; }
 .firma-r { font-size: 9.5px; color: #888; font-style: italic; }
-
 .cot-gold-bar { height: 4px; background: var(--gold); }
-.cot-pie {
-  text-align: center;
-  font-size: 9px;
-  color: #999;
-  font-style: italic;
-  padding: 8px;
-  background: white;
-}
-
-.print-actions {
-  display: flex;
-  gap: 10px;
-  max-width: 760px;
-  margin: 1rem auto 0;
-}
-.btn-print {
-  flex: 1;
-  padding: 12px;
-  background: var(--dark);
-  color: white;
-  border: none;
-  border-radius: var(--radius);
-  font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
-  font-size: 15px;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: background 0.15s;
-}
+.cot-pie { text-align: center; font-size: 9px; color: #999; font-style: italic; padding: 8px; background: white; }
+.print-actions { display: flex; gap: 10px; max-width: 760px; margin: 1rem auto 0; }
+.btn-print { flex: 1; padding: 12px; background: var(--dark); color: white; border: none; border-radius: var(--radius); font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 15px; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: background 0.15s; }
 .btn-print:hover { background: #333; }
-
-/* ── RESPONSIVE MÓVIL ── */
 @media (max-width: 768px) {
-  html, body { overflow: auto; height: auto; }
   .app { grid-template-columns: 1fr; height: auto; overflow: visible; }
-  .panel-form { height: auto; position: static; border-right: none; border-bottom: 2px solid var(--gray-200); }
+  .panel-form { height: auto; position: static; border-right: none; border-bottom: 2px solid var(--gray-200); overflow-y: visible; }
   .panel-preview { height: auto; padding: 1rem; }
   .item-fields { grid-template-columns: 1fr; }
   .field-row { grid-template-columns: 1fr; }
 }
-
-/* ── PRINT ── */
 @media print {
   .topbar, .panel-form, .print-actions { display: none !important; }
   .app { display: block; }
@@ -528,47 +154,31 @@ textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
 </style>
 </head>
 <body>
-
-
-
 <div class="topbar">
   <div>
     <div class="topbar-logo">SOJI<span>FAM</span></div>
     <div class="topbar-sub">Remodelaciones</div>
   </div>
-  <div class="topbar-sub" style="display:none;color:#666" id="app-title">Generador de Cotizaciones</div>
-  <div class="saved-badge" id="saved-badge">
-    ✓ Guardado automáticamente
-  </div>
+  <div class="saved-badge" id="saved-badge">&#10003; Guardado autom&#225;ticamente</div>
 </div>
-
 <div class="app">
-
-  <!-- ══ PANEL FORMULARIO ══ -->
   <div class="panel-form">
     <div class="panel-inner">
-
-      <!-- Datos del cliente -->
-      <div class="sec-head">
-        <div class="sec-dot"></div>
-        <div class="sec-label">Datos del cliente</div>
-        <div class="sec-line"></div>
-      </div>
-
+      <div class="sec-head"><div class="sec-dot"></div><div class="sec-label">Datos del cliente</div><div class="sec-line"></div></div>
       <div class="field-row">
         <div class="field">
           <label>Nombre del cliente</label>
-          <input type="text" id="cliente" placeholder="Ej. Juan Pérez">
+          <input type="text" id="cliente" placeholder="Ej. Juan P&#233;rez">
         </div>
         <div class="field">
-          <label>N° de proforma <span style="color:var(--gold);font-size:10px;font-weight:400">(automático)</span></label>
+          <label>N&#176; de proforma <span style="color:var(--gold);font-size:10px;font-weight:400">(autom&#225;tico)</span></label>
           <div style="display:flex;gap:6px;align-items:center">
             <input type="text" id="proforma" readonly style="background:var(--gray-200);cursor:default;font-weight:700;color:#c9871a;flex:1;min-width:0">
-            <button onclick="editarNumero()" title="Ajustar número" style="background:var(--gold);border:none;border-radius:var(--radius);color:#fff;font-size:12px;padding:0 10px;height:38px;cursor:pointer;white-space:nowrap;font-family:'Barlow',sans-serif;flex-shrink:0">✏️ Ajustar</button>
-            <button onclick="verHistorial()" title="Ver historial de proformas" style="background:var(--dark);border:none;border-radius:var(--radius);color:var(--gold);font-size:12px;padding:0 10px;height:38px;cursor:pointer;white-space:nowrap;font-family:'Barlow',sans-serif;flex-shrink:0">📋 Historial</button>
+            <button onclick="editarNumero()" style="background:var(--gold);border:none;border-radius:var(--radius);color:#fff;font-size:12px;padding:0 10px;height:38px;cursor:pointer;white-space:nowrap;font-family:'Barlow',sans-serif;flex-shrink:0">&#9999;&#65039; Ajustar</button>
+            <button onclick="verHistorial()" style="background:var(--dark);border:none;border-radius:var(--radius);color:var(--gold);font-size:12px;padding:0 10px;height:38px;cursor:pointer;white-space:nowrap;font-family:'Barlow',sans-serif;flex-shrink:0">&#128203; Historial</button>
           </div>
           <div id="ajuste-box" style="display:none;margin-top:8px;background:#fffbf0;border:1.5px solid var(--gold);border-radius:var(--radius);padding:10px 12px;">
-            <div style="font-size:11px;color:#888;margin-bottom:6px;">¿Cuál fue el último número de proforma que usó? El siguiente será ese + 1.</div>
+            <div style="font-size:11px;color:#888;margin-bottom:6px;">&#191;Cu&#225;l fue el &#250;ltimo n&#250;mero de proforma que us&#243;? El siguiente ser&#225; ese + 1.</div>
             <div style="display:flex;gap:8px;align-items:center">
               <input type="text" id="ajuste-input" placeholder="Ej. 001542" style="flex:1;font-weight:700;text-align:center;font-size:15px;">
               <button onclick="aplicarAjuste()" style="background:var(--dark);border:none;border-radius:var(--radius);color:#fff;font-size:13px;font-weight:700;padding:0 14px;height:36px;cursor:pointer;font-family:'Barlow',sans-serif;">Aplicar</button>
@@ -578,44 +188,19 @@ textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
         </div>
       </div>
       <div class="field-row">
-        <div class="field">
-          <label>Fecha</label>
-          <input type="text" id="fecha" placeholder="Ej. 21 de mayo de 2026">
-        </div>
-        <div class="field">
-          <label>Validez</label>
-          <input type="text" id="validez" value="15 días hábiles">
-        </div>
+        <div class="field"><label>Fecha</label><input type="text" id="fecha" placeholder="Ej. 21 de mayo de 2026"></div>
+        <div class="field"><label>Validez</label><input type="text" id="validez" value="15 d&#237;as h&#225;biles"></div>
       </div>
-
-      <!-- Trabajos -->
-      <div class="sec-head">
-        <div class="sec-dot"></div>
-        <div class="sec-label">Trabajos a realizar</div>
-        <div class="sec-line"></div>
-      </div>
+      <div class="sec-head"><div class="sec-dot"></div><div class="sec-label">Trabajos a realizar</div><div class="sec-line"></div></div>
       <div id="trabajos-list"></div>
       <button class="btn-add" onclick="addTrabajo()">+ Agregar trabajo</button>
-
-      <!-- Notas -->
-      <div class="sec-head">
-        <div class="sec-dot"></div>
-        <div class="sec-label">Notas técnicas</div>
-        <div class="sec-line"></div>
-      </div>
+      <div class="sec-head"><div class="sec-dot"></div><div class="sec-label">Notas t&#233;cnicas</div><div class="sec-line"></div></div>
       <div id="notas-list"></div>
-      <button class="btn-add" onclick="addNota()">+ Agregar nota técnica</button>
-
-      <!-- Montos -->
-      <div class="sec-head">
-        <div class="sec-dot"></div>
-        <div class="sec-label">Resumen económico</div>
-        <div class="sec-line"></div>
-      </div>
-
+      <button class="btn-add" onclick="addNota()">+ Agregar nota t&#233;cnica</button>
+      <div class="sec-head"><div class="sec-dot"></div><div class="sec-label">Resumen econ&#243;mico</div><div class="sec-line"></div></div>
       <div class="monto-box">
         <div class="monto-row">
-          <span class="monto-lbl">Subtotal (₡)</span>
+          <span class="monto-lbl">Subtotal (&#8353;)</span>
           <input type="text" id="subtotal" placeholder="0,00" class="monto-input" oninput="calcTotales(); autoguardar()">
         </div>
         <div class="monto-row">
@@ -642,22 +227,15 @@ textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
         <div class="monto-divider"></div>
         <div class="monto-total-row">
           <span class="monto-total-lbl">Total a cancelar</span>
-          <span class="monto-total-val" id="total-display">₡ 0,00</span>
+          <span class="monto-total-val" id="total-display">&#8353; 0,00</span>
         </div>
       </div>
-
-      <button class="btn-generate" onclick="generarVista()">▶ Generar cotización</button>
-
+      <button class="btn-generate" onclick="generarVista()">&#9654; Generar cotizaci&#243;n</button>
       <div style="margin-top:10px;text-align:center">
-        <button onclick="limpiarTodo()" style="background:none;border:none;font-size:11px;color:var(--gray-400);cursor:pointer;text-decoration:underline;font-family:'Barlow',sans-serif">
-          Limpiar todo y empezar de cero
-        </button>
+        <button onclick="limpiarTodo()" style="background:none;border:none;font-size:11px;color:var(--gray-400);cursor:pointer;text-decoration:underline;font-family:'Barlow',sans-serif">Limpiar todo y empezar de cero</button>
       </div>
-
     </div>
   </div>
-
-  <!-- ══ PANEL VISTA PREVIA ══ -->
   <div class="panel-preview" id="panel-preview">
     <div class="preview-hint" id="preview-hint">
       <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
@@ -667,19 +245,16 @@ textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
         <rect x="20" y="32" width="21" height="2" rx="1" fill="#ccc"/>
         <rect x="20" y="38" width="14" height="2" rx="1" fill="#ccc"/>
       </svg>
-      <p>Complete el formulario y presione<br><strong>Generar cotización</strong></p>
+      <p>Complete el formulario y presione<br><strong>Generar cotizaci&#243;n</strong></p>
     </div>
     <div id="cot-output" style="display:none">
       <div class="cotizacion" id="cot-doc"></div>
       <div class="print-actions">
-        <button class="btn-print" onclick="imprimirConNombre()">🖨 Imprimir / Guardar PDF</button>
+        <button class="btn-print" onclick="imprimirConNombre()">&#128424; Imprimir / Guardar PDF</button>
       </div>
     </div>
   </div>
-
 </div>
-
-<!-- ══ MODAL HISTORIAL ══ -->
 <div id="modal-historial" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:200;align-items:center;justify-content:center;">
   <div style="background:#fff;border-radius:10px;width:90%;max-width:560px;max-height:80vh;display:flex;flex-direction:column;overflow:hidden;font-family:'Barlow',sans-serif;">
     <div style="background:#111;padding:16px 20px;display:flex;align-items:center;justify-content:space-between;">
@@ -687,7 +262,7 @@ textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
         <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;color:#fff;letter-spacing:1px">HISTORIAL DE PROFORMAS</div>
         <div style="font-size:11px;color:#888;margin-top:2px">Todas las cotizaciones generadas</div>
       </div>
-      <button onclick="cerrarHistorial()" style="background:none;border:none;color:#888;font-size:22px;cursor:pointer;line-height:1">✕</button>
+      <button onclick="cerrarHistorial()" style="background:none;border:none;color:#888;font-size:22px;cursor:pointer;line-height:1">&#10005;</button>
     </div>
     <div id="historial-lista" style="overflow-y:auto;flex:1;padding:12px 16px;"></div>
     <div style="padding:12px 16px;border-top:1px solid #eee;display:flex;gap:8px;justify-content:flex-end;">
@@ -696,53 +271,37 @@ textarea { resize: vertical; min-height: 60px; line-height: 1.5; }
     </div>
   </div>
 </div>
-
 <script>
-// ── ESTADO ──────────────────────────────────────────────────────────────────
 let trabajos = [];
 let notas = [];
 let saveTimer = null;
-
-// ── JSONBIN CONFIG ────────────────────────────────────────────────────────────
 const BIN_ID = '6a0f8839ee5a733b12fb1448';
 const API_KEY = '$2a$10$HkebJDZBBWt25G8u3XTg3u/P85gjKyovsf7bpCsgBUEUQTdinGtRq';
 const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 
-// ── IMPRIMIR CON NOMBRE ──────────────────────────────────────────────────────
 function imprimirConNombre() {
   const cliente = document.getElementById('cliente').value || 'Cliente';
   const nombreArchivo = 'Sojifam - ' + cliente;
   const titleOriginal = document.title;
   document.title = nombreArchivo;
-  window.print();
-  setTimeout(() => { document.title = titleOriginal; }, 1000);
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => { document.title = titleOriginal; }, 2000);
+  }, 200);
 }
 
-// ── PROFORMA AUTO-INCREMENTO ─────────────────────────────────────────────────
-function formatProforma(n) {
-  return String(n).padStart(6, '0');
-}
+function formatProforma(n) { return String(n).padStart(6, '0'); }
 
 async function asignarNuevaProforma() {
   document.getElementById('proforma').value = 'Cargando...';
   try {
-    const res = await fetch(BIN_URL + '/latest', {
-      method: 'GET',
-      headers: {
-        'X-Master-Key': API_KEY,
-        'X-Bin-Meta': 'false'
-      }
-    });
+    const res = await fetch(BIN_URL + '/latest', { method: 'GET', headers: { 'X-Master-Key': API_KEY, 'X-Bin-Meta': 'false' } });
     if (!res.ok) throw new Error('Error ' + res.status);
     const data = await res.json();
-    const ultima = data.ultima_proforma || 0;
-    const siguiente = ultima + 1;
-    document.getElementById('proforma').value = formatProforma(siguiente);
+    document.getElementById('proforma').value = formatProforma((data.ultima_proforma || 0) + 1);
   } catch(e) {
-    console.error('JSONBin error:', e);
     const local = parseInt(localStorage.getItem('sojifam_ultima_proforma') || '0', 10);
     document.getElementById('proforma').value = formatProforma(local + 1);
-    document.getElementById('proforma').title = 'Modo sin conexión — sincronizará cuando haya internet';
   }
 }
 
@@ -752,20 +311,10 @@ async function confirmarProforma() {
   localStorage.setItem('sojifam_ultima_proforma', String(num));
   guardarEnHistorial(num);
   try {
-    const res = await fetch(BIN_URL, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': API_KEY,
-        'X-Bin-Meta': 'false'
-      },
-      body: JSON.stringify({ ultima_proforma: num })
-    });
-    if (!res.ok) throw new Error('Error ' + res.status);
-  } catch(e) {
-    console.warn('No se pudo actualizar en la nube, guardado localmente.');
-  }
+    await fetch(BIN_URL, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY, 'X-Bin-Meta': 'false' }, body: JSON.stringify({ ultima_proforma: num }) });
+  } catch(e) {}
 }
+
 function guardarEnHistorial(num) {
   const historial = getHistorial();
   const cliente = document.getElementById('cliente').value || '(sin nombre)';
@@ -773,188 +322,82 @@ function guardarEnHistorial(num) {
   const sub = parseMonto(document.getElementById('subtotal').value);
   const pct = parseFloat(document.getElementById('iva-pct').value) || 0;
   const total = sub + (sub * pct / 100);
-  const entrada = { num: formatProforma(num), cliente, fecha, total: fmt(total), ts: Date.now() };
-  historial.unshift(entrada);
+  historial.unshift({ num: formatProforma(num), cliente, fecha, total: fmt(total), ts: Date.now() });
   localStorage.setItem('sojifam_historial', JSON.stringify(historial.slice(0, 100)));
 }
-function getHistorial() {
-  try { return JSON.parse(localStorage.getItem('sojifam_historial') || '[]'); } catch(e) { return []; }
-}
+function getHistorial() { try { return JSON.parse(localStorage.getItem('sojifam_historial') || '[]'); } catch(e) { return []; } }
 
-// ── MODAL HISTORIAL ───────────────────────────────────────────────────────────
 function editarNumero() {
   const box = document.getElementById('ajuste-box');
   box.style.display = box.style.display === 'none' ? 'block' : 'none';
-  if (box.style.display === 'block') {
-    document.getElementById('ajuste-input').value = document.getElementById('proforma').value;
-    document.getElementById('ajuste-input').focus();
-    document.getElementById('ajuste-input').select();
-  }
+  if (box.style.display === 'block') { document.getElementById('ajuste-input').value = document.getElementById('proforma').value; document.getElementById('ajuste-input').focus(); }
 }
 async function aplicarAjuste() {
-  const val = document.getElementById('ajuste-input').value.trim();
-  const num = parseInt(val, 10);
-  if (isNaN(num) || num < 0) { alert('Ingrese un número válido.'); return; }
+  const num = parseInt(document.getElementById('ajuste-input').value.trim(), 10);
+  if (isNaN(num) || num < 0) { alert('Ingrese un n\u00famero v\u00e1lido.'); return; }
   localStorage.setItem('sojifam_ultima_proforma', String(num));
-  try {
-    const res = await fetch(BIN_URL, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Master-Key': API_KEY,
-        'X-Bin-Meta': 'false'
-      },
-      body: JSON.stringify({ ultima_proforma: num })
-    });
-    if (!res.ok) throw new Error('Error ' + res.status);
-    document.getElementById('proforma').value = formatProforma(num + 1);
-    document.getElementById('ajuste-box').style.display = 'none';
-  } catch(e) {
-    document.getElementById('proforma').value = formatProforma(num + 1);
-    document.getElementById('ajuste-box').style.display = 'none';
-    console.warn('Guardado solo localmente.');
-  }
-}
-function cancelarAjuste() {
+  try { await fetch(BIN_URL, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'X-Master-Key': API_KEY, 'X-Bin-Meta': 'false' }, body: JSON.stringify({ ultima_proforma: num }) }); } catch(e) {}
+  document.getElementById('proforma').value = formatProforma(num + 1);
   document.getElementById('ajuste-box').style.display = 'none';
 }
+function cancelarAjuste() { document.getElementById('ajuste-box').style.display = 'none'; }
+
 function verHistorial() {
   const h = getHistorial();
   const lista = document.getElementById('historial-lista');
-  if (h.length === 0) {
-    lista.innerHTML = '<div style="text-align:center;color:#bbb;padding:32px;font-size:13px">No hay proformas generadas aún.</div>';
-  } else {
-    lista.innerHTML = h.map(e => `
-      <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f0f0f0;">
-        <div style="background:#F2B300;color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;padding:4px 10px;border-radius:4px;flex-shrink:0">${e.num}</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-weight:600;font-size:13px;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(e.cliente)}</div>
-          <div style="font-size:11px;color:#888">${esc(e.fecha)}</div>
-        </div>
-        <div style="text-align:right;flex-shrink:0">
-          <div style="font-weight:700;font-size:13px;color:#111">₡ ${esc(e.total)}</div>
-        </div>
-      </div>`).join('');
-  }
+  lista.innerHTML = h.length === 0
+    ? '<div style="text-align:center;color:#bbb;padding:32px;font-size:13px">No hay proformas generadas a\u00fan.</div>'
+    : h.map(e => `<div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #f0f0f0;"><div style="background:#F2B300;color:#fff;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;padding:4px 10px;border-radius:4px;flex-shrink:0">${e.num}</div><div style="flex:1;min-width:0"><div style="font-weight:600;font-size:13px;color:#111">${esc(e.cliente)}</div><div style="font-size:11px;color:#888">${esc(e.fecha)}</div></div><div style="text-align:right"><div style="font-weight:700;font-size:13px;color:#111">&#8353; ${esc(e.total)}</div></div></div>`).join('');
   document.getElementById('modal-historial').style.display = 'flex';
 }
-function cerrarHistorial() {
-  document.getElementById('modal-historial').style.display = 'none';
-}
-function limpiarHistorial() {
-  if (!confirm('¿Borrar todo el historial de proformas? El contador NO se reinicia.')) return;
-  localStorage.removeItem('sojifam_historial');
-  verHistorial();
-}
+function cerrarHistorial() { document.getElementById('modal-historial').style.display = 'none'; }
+function limpiarHistorial() { if (!confirm('\u00bfBorrar todo el historial?')) return; localStorage.removeItem('sojifam_historial'); verHistorial(); }
 
-// ── UTILIDADES ───────────────────────────────────────────────────────────────
-function esc(s) {
-  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-function parseMonto(v) {
-  return parseFloat((v||'').replace(/\./g,'').replace(',','.')) || 0;
-}
-function fmt(n) {
-  return n.toLocaleString('es-CR', {minimumFractionDigits:2, maximumFractionDigits:2});
-}
+function esc(s) { return (s||''). replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function parseMonto(v) { return parseFloat((v||''). replace(/\./g,'').replace(',','.')) || 0; }
+function fmt(n) { return n.toLocaleString('es-CR', {minimumFractionDigits:2, maximumFractionDigits:2}); }
 
-// ── CÁLCULO IVA ───────────────────────────────────────────────────────────────
 function calcTotales() {
   const sub = parseMonto(document.getElementById('subtotal').value);
   const pct = parseFloat(document.getElementById('iva-pct').value) || 0;
   const iva = sub * pct / 100;
-  const total = sub + iva;
   document.getElementById('iva-monto').value = fmt(iva);
-  document.getElementById('total-display').textContent = '₡ ' + fmt(total);
+  document.getElementById('total-display').textContent = '\u20A1 ' + fmt(sub + iva);
 }
 
-// ── RENDER TRABAJOS ───────────────────────────────────────────────────────────
 function renderTrabajos() {
-  const c = document.getElementById('trabajos-list');
-  c.innerHTML = '';
+  const c = document.getElementById('trabajos-list'); c.innerHTML = '';
   trabajos.forEach((t, i) => {
-    const d = document.createElement('div');
-    d.className = 'item-card';
-    d.innerHTML = `
-      <div class="item-header">
-        <span class="item-badge">${String(i+1).padStart(2,'0')}</span>
-        <button class="btn-del" onclick="removeTrabajo(${i})" title="Eliminar">✕</button>
-      </div>
-      <div class="item-fields">
-        <div class="field">
-          <label>Trabajo</label>
-          <input type="text" value="${esc(t.trabajo)}" oninput="trabajos[${i}].trabajo=this.value; autoguardar()" placeholder="Ej. Tapicheles">
-        </div>
-        <div class="field">
-          <label>Descripción</label>
-          <textarea oninput="trabajos[${i}].desc=this.value; autoguardar()" placeholder="Descripción del trabajo...">${esc(t.desc)}</textarea>
-        </div>
-      </div>`;
+    const d = document.createElement('div'); d.className = 'item-card';
+    d.innerHTML = `<div class="item-header"><span class="item-badge">${String(i+1).padStart(2,'0')}</span><button class="btn-del" onclick="removeTrabajo(${i})">&#10005;</button></div><div class="item-fields"><div class="field"><label>Trabajo</label><input type="text" value="${esc(t.trabajo)}" oninput="trabajos[${i}].trabajo=this.value;autoguardar()" placeholder="Ej. Tapicheles"></div><div class="field"><label>Descripci\u00f3n</label><textarea oninput="trabajos[${i}].desc=this.value;autoguardar()" placeholder="Descripci\u00f3n...">${esc(t.desc)}</textarea></div></div>`;
     c.appendChild(d);
   });
 }
-
 function renderNotas() {
-  const c = document.getElementById('notas-list');
-  c.innerHTML = '';
+  const c = document.getElementById('notas-list'); c.innerHTML = '';
   notas.forEach((n, i) => {
-    const d = document.createElement('div');
-    d.className = 'item-card';
-    d.innerHTML = `
-      <div class="item-header">
-        <span class="item-badge" style="background:#333">Nota ${String(i+1).padStart(2,'0')}</span>
-        <button class="btn-del" onclick="removeNota(${i})" title="Eliminar">✕</button>
-      </div>
-      <div class="item-fields">
-        <div class="field">
-          <label>Ítem</label>
-          <input type="text" value="${esc(n.titulo)}" oninput="notas[${i}].titulo=this.value; autoguardar()" placeholder="Ej. Tapicheles">
-        </div>
-        <div class="field">
-          <label>Nota técnica</label>
-          <textarea oninput="notas[${i}].desc=this.value; autoguardar()" placeholder="Descripción técnica...">${esc(n.desc)}</textarea>
-        </div>
-      </div>`;
+    const d = document.createElement('div'); d.className = 'item-card';
+    d.innerHTML = `<div class="item-header"><span class="item-badge" style="background:#333">Nota ${String(i+1).padStart(2,'0')}</span><button class="btn-del" onclick="removeNota(${i})">&#10005;</button></div><div class="item-fields"><div class="field"><label>\u00cdtem</label><input type="text" value="${esc(n.titulo)}" oninput="notas[${i}].titulo=this.value;autoguardar()" placeholder="Ej. Tapicheles"></div><div class="field"><label>Nota t\u00e9cnica</label><textarea oninput="notas[${i}].desc=this.value;autoguardar()" placeholder="Descripci\u00f3n t\u00e9cnica...">${esc(n.desc)}</textarea></div></div>`;
     c.appendChild(d);
   });
 }
+function addTrabajo() { trabajos.push({trabajo:'',desc:''}); renderTrabajos(); autoguardar(); }
+function removeTrabajo(i) { trabajos.splice(i,1); renderTrabajos(); autoguardar(); }
+function addNota() { notas.push({titulo:'',desc:''}); renderNotas(); autoguardar(); }
+function removeNota(i) { notas.splice(i,1); renderNotas(); autoguardar(); }
 
-function addTrabajo() {
-  trabajos.push({ trabajo: '', desc: '' });
-  renderTrabajos();
-  autoguardar();
-}
-function removeTrabajo(i) {
-  trabajos.splice(i, 1);
-  renderTrabajos();
-  autoguardar();
-}
-function addNota() {
-  notas.push({ titulo: '', desc: '' });
-  renderNotas();
-  autoguardar();
-}
-function removeNota(i) {
-  notas.splice(i, 1);
-  renderNotas();
-  autoguardar();
-}
-
-// ── AUTOGUARDADO ──────────────────────────────────────────────────────────────
 function autoguardar() {
   clearTimeout(saveTimer);
   saveTimer = setTimeout(() => {
-    const data = {
+    localStorage.setItem('sojifam_cotizacion', JSON.stringify({
       cliente: document.getElementById('cliente').value,
       fecha: document.getElementById('fecha').value,
       validez: document.getElementById('validez').value,
       subtotal: document.getElementById('subtotal').value,
       ivaPct: document.getElementById('iva-pct').value,
       tipoServicio: document.getElementById('tipo-servicio').value,
-      trabajos: trabajos,
-      notas: notas,
-    };
-    localStorage.setItem('sojifam_cotizacion', JSON.stringify(data));
+      trabajos, notas
+    }));
     const badge = document.getElementById('saved-badge');
     badge.classList.add('show');
     setTimeout(() => badge.classList.remove('show'), 2000);
@@ -963,175 +406,117 @@ function autoguardar() {
 
 function cargarGuardado() {
   try {
-    const raw = localStorage.getItem('sojifam_cotizacion');
-    if (!raw) return;
-    const d = JSON.parse(raw);
+    const d = JSON.parse(localStorage.getItem('sojifam_cotizacion') || 'null');
+    if (!d) return;
     document.getElementById('cliente').value = d.cliente || '';
     document.getElementById('fecha').value = d.fecha || '';
-    document.getElementById('validez').value = d.validez || '15 días hábiles';
+    document.getElementById('validez').value = d.validez || '15 d\u00edas h\u00e1biles';
     document.getElementById('subtotal').value = d.subtotal || '';
     document.getElementById('iva-pct').value = d.ivaPct || '13';
     document.getElementById('tipo-servicio').value = d.tipoServicio || 'mano_obra_materiales';
-    trabajos = d.trabajos || [];
-    notas = d.notas || [];
-    renderTrabajos();
-    renderNotas();
-    calcTotales();
+    trabajos = d.trabajos || []; notas = d.notas || [];
+    renderTrabajos(); renderNotas(); calcTotales();
   } catch(e) {}
 }
 
 function limpiarTodo() {
-  if (!confirm('¿Seguro que desea limpiar todo y empezar una nueva cotización?')) return;
+  if (!confirm('\u00bfSeguro que desea limpiar todo?')) return;
   localStorage.removeItem('sojifam_cotizacion');
-  document.getElementById('cliente').value = '';
-  document.getElementById('fecha').value = '';
-  document.getElementById('validez').value = '15 días hábiles';
-  document.getElementById('subtotal').value = '';
+  ['cliente','fecha','subtotal','iva-monto'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('validez').value = '15 d\u00edas h\u00e1biles';
   document.getElementById('iva-pct').value = '13';
-  document.getElementById('iva-monto').value = '';
-  document.getElementById('total-display').textContent = '₡ 0,00';
   document.getElementById('tipo-servicio').value = 'mano_obra_materiales';
-  trabajos = [];
-  notas = [];
-  renderTrabajos();
-  renderNotas();
-  asignarNuevaProforma();
+  document.getElementById('total-display').textContent = '\u20A1 0,00';
+  trabajos = []; notas = [];
+  renderTrabajos(); renderNotas(); asignarNuevaProforma();
   document.getElementById('cot-output').style.display = 'none';
   document.getElementById('preview-hint').style.display = 'flex';
 }
 
-// Guardar en campos de texto al escribir
-['cliente','fecha','validez'].forEach(id => {
-  document.getElementById(id).addEventListener('input', autoguardar);
-});
+['cliente','fecha','validez'].forEach(id => document.getElementById(id).addEventListener('input', autoguardar));
 
-// ── ETIQUETA TIPO SERVICIO ────────────────────────────────────────────────────
 function labelTipoServicio(val) {
-  const map = {
-    'mano_obra_materiales': 'Mano de obra y materiales',
-    'solo_materiales': 'Solo materiales',
-    'solo_mano_obra': 'Solo mano de obra'
-  };
-  return map[val] || 'Mano de obra y materiales';
+  return {mano_obra_materiales:'Mano de obra y materiales',solo_materiales:'Solo materiales',solo_mano_obra:'Solo mano de obra'}[val] || 'Mano de obra y materiales';
 }
 
-// ── GENERAR VISTA ─────────────────────────────────────────────────────────────
 function generarVista() {
   confirmarProforma();
   const cliente = document.getElementById('cliente').value || '[Cliente]';
   const proforma = document.getElementById('proforma').value || '000000';
-  const fecha = document.getElementById('fecha').value || '—';
-  const validez = document.getElementById('validez').value || '15 días hábiles';
+  const fecha = document.getElementById('fecha').value || '\u2014';
+  const validez = document.getElementById('validez').value || '15 d\u00edas h\u00e1biles';
   const sub = parseMonto(document.getElementById('subtotal').value);
   const pct = parseFloat(document.getElementById('iva-pct').value) || 0;
   const iva = sub * pct / 100;
   const total = sub + iva;
-  const tipoServicio = document.getElementById('tipo-servicio').value;
-  const tipoLabel = labelTipoServicio(tipoServicio);
-
+  const tipoLabel = labelTipoServicio(document.getElementById('tipo-servicio').value);
   const filasTrab = trabajos.length
-    ? trabajos.map((t, i) => `
-        <tr>
-          <td style="text-align:center;width:44px"><span class="cot-num-gold">${String(i+1).padStart(2,'0')}</span></td>
-          <td style="width:32%"><strong>${esc(t.trabajo)}</strong></td>
-          <td>${esc(t.desc)}</td>
-        </tr>`).join('')
+    ? trabajos.map((t,i) => `<tr><td style="text-align:center;width:44px"><span class="cot-num-gold">${String(i+1).padStart(2,'0')}</span></td><td style="width:32%"><strong>${esc(t.trabajo)}</strong></td><td>${esc(t.desc)}</td></tr>`).join('')
     : '<tr><td colspan="3" style="text-align:center;color:#bbb;padding:16px">Sin trabajos registrados</td></tr>';
-
-  const filasNotas = notas.map(n => `
-    <tr>
-      <td style="width:32%"><span class="nota-titulo">${esc(n.titulo)}</span></td>
-      <td><span class="nota-desc">${esc(n.desc)}</span></td>
-    </tr>`).join('');
-
-  const ivaRow = pct > 0
-    ? `<tr><td>IVA (${pct}%)</td><td>₡ ${fmt(iva)}</td></tr>`
-    : '';
+  const filasNotas = notas.map(n => `<tr><td style="width:32%"><span class="nota-titulo">${esc(n.titulo)}</span></td><td><span class="nota-desc">${esc(n.desc)}</span></td></tr>`).join('');
+  const ivaRow = pct > 0 ? `<tr><td>IVA (${pct}%)</td><td>&#8353; ${fmt(iva)}</td></tr>` : '';
 
   document.getElementById('cot-doc').innerHTML = `
     <div class="cot-header">
-      <div class="cot-logo-txt">
-        <div class="big">SOJI<span>FAM</span></div>
-        <div class="line"></div>
-        <span class="remo">Remodelaciones</span>
-      </div>
-      <div class="cot-title-right">
-        <h1>Cotización de Servicios</h1>
-        <div class="subtitle">Soluciones profesionales en construcción y remodelación</div>
-      </div>
+      <div class="cot-logo-txt"><div class="big">SOJI<span>FAM</span></div><div class="line"></div><span class="remo">Remodelaciones</span></div>
+      <div class="cot-title-right"><h1>Cotizaci\u00f3n de Servicios</h1><div class="subtitle">Soluciones profesionales en construcci\u00f3n y remodelaci\u00f3n</div></div>
     </div>
-
     <div class="cot-info-grid">
       <div class="cot-cell"><div class="cl">Cliente</div><div class="cv">${esc(cliente)}</div></div>
-      <div class="cot-cell"><div class="cl">N° Proforma</div><div class="cv">${esc(proforma)}</div></div>
+      <div class="cot-cell"><div class="cl">N\u00b0 Proforma</div><div class="cv">${esc(proforma)}</div></div>
       <div class="cot-cell"><div class="cl">Fecha</div><div class="cv">${esc(fecha)}</div></div>
       <div class="cot-cell"><div class="cl">Validez</div><div class="cv">${esc(validez)}</div></div>
     </div>
-
     <div class="cot-section">Trabajos a realizar</div>
-    <table class="cot-tbl">
-      <tr><th style="width:44px">#</th><th style="width:32%">Trabajo</th><th>Descripción</th></tr>
-      ${filasTrab}
-    </table>
-
-    ${notas.length ? `
-    <div class="cot-section" style="margin-top:2px">Notas técnicas</div>
-    <table class="cot-nota-tbl">${filasNotas}</table>` : ''}
-
-    <div class="cot-section" style="margin-top:2px">Resumen económico</div>
+    <table class="cot-tbl"><tr><th style="width:44px">#</th><th style="width:32%">Trabajo</th><th>Descripci\u00f3n</th></tr>${filasTrab}</table>
+    ${notas.length ? `<div class="cot-section" style="margin-top:2px">Notas t\u00e9cnicas</div><table class="cot-nota-tbl">${filasNotas}</table>` : ''}
+    <div class="cot-section" style="margin-top:2px">Resumen econ\u00f3mico</div>
     <table class="cot-resumen">
-      <tr><th>Descripción</th><th>Monto</th></tr>
-      <tr><td>Subtotal — ${esc(tipoLabel)}</td><td>₡ ${fmt(sub)}</td></tr>
+      <tr><th>Descripci\u00f3n</th><th>Monto</th></tr>
+      <tr><td>Subtotal \u2014 ${esc(tipoLabel)}</td><td>&#8353; ${fmt(sub)}</td></tr>
       ${ivaRow}
-      <tr class="total-row"><td>Total a cancelar</td><td>₡ ${fmt(total)}</td></tr>
+      <tr class="total-row"><td>Total a cancelar</td><td>&#8353; ${fmt(total)}</td></tr>
     </table>
-
     <div class="cot-section" style="margin-top:2px">Tiempo de entrega</div>
-    <div class="cot-text-box">El tiempo estimado de entrega y finalización de los trabajos será coordinado directamente con el cliente una vez confirmada y aprobada la presente proforma, tomando en cuenta disponibilidad de materiales y condiciones del sitio.</div>
-
-    <div class="cot-section" style="margin-top:2px">Cláusula de exoneración de responsabilidad</div>
-    <div class="cot-text-box">El señor / la señora <strong>${esc(cliente)}</strong> queda exento/a de toda responsabilidad contractual, laboral y civil de los empleados que sean contratados por Remodelaciones Sojifam S.A., así como de los accidentes que se provoquen a terceras personas.</div>
-
-    <div class="cot-closing">En <strong>SOJIFAM Remodelaciones</strong> nos comprometemos a brindarle un servicio de excelencia, ejecutado por personal calificado y con los más altos estándares de calidad en materiales y mano de obra. Cada proyecto es tratado con profesionalismo, puntualidad y atención al detalle. Quedamos a su entera disposición para cualquier consulta o ajuste.</div>
-
+    <div class="cot-text-box">El tiempo estimado de entrega y finalizaci\u00f3n de los trabajos ser\u00e1 coordinado directamente con el cliente una vez confirmada y aprobada la presente proforma, tomando en cuenta disponibilidad de materiales y condiciones del sitio.</div>
+    <div class="cot-section" style="margin-top:2px">Cl\u00e1usula de exoneraci\u00f3n de responsabilidad</div>
+    <div class="cot-text-box">El se\u00f1or / la se\u00f1ora <strong>${esc(cliente)}</strong> queda exento/a de toda responsabilidad contractual, laboral y civil de los empleados que sean contratados por Remodelaciones Sojifam S.A., as\u00ed como de los accidentes que se provoquen a terceras personas.</div>
+    <div class="cot-closing">En <strong>SOJIFAM Remodelaciones</strong> nos comprometemos a brindarle un servicio de excelencia, ejecutado por personal calificado y con los m\u00e1s altos est\u00e1ndares de calidad. Quedamos a su entera disposici\u00f3n para cualquier consulta o ajuste.</div>
     <div class="cot-firmas">
-      <div class="firma-blk">
-        <div class="firma-linea"></div>
-        <div class="firma-n">SOJIFAM Remodelaciones S.A.</div>
-        <div class="firma-r">Empresa contratante</div>
-      </div>
-      <div class="firma-blk">
-        <div class="firma-linea"></div>
-        <div class="firma-n">${esc(cliente)}</div>
-        <div class="firma-r">Cliente</div>
-      </div>
+      <div class="firma-blk"><div class="firma-linea"></div><div class="firma-n">SOJIFAM Remodelaciones S.A.</div><div class="firma-r">Empresa contratante</div></div>
+      <div class="firma-blk"><div class="firma-linea"></div><div class="firma-n">${esc(cliente)}</div><div class="firma-r">Cliente</div></div>
     </div>
-
     <div class="cot-gold-bar"></div>
-    <div class="cot-pie">Proforma N° ${esc(proforma)} — Este documento no constituye un contrato hasta ser debidamente firmado por ambas partes.</div>
+    <div class="cot-pie">Proforma N\u00b0 ${esc(proforma)} \u2014 Este documento no constituye un contrato hasta ser debidamente firmado por ambas partes.</div>
   `;
-
-  document.getElementById('preview-hint').style.display = 'none';
-  document.getElementById('cot-output').style.display = 'block';
-  document.getElementById('cot-output').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // Imprimir directamente
+  const cliente = document.getElementById('cliente').value || 'Cliente';
+  const nombreArchivo = 'Sojifam - ' + cliente;
+  const titleOriginal = document.title;
+  document.title = nombreArchivo;
+  // Crear ventana de impresion con la cotizacion
+  const cotHtml = document.getElementById('cot-doc').innerHTML;
+  const printWin = window.open('', '_blank');
+  printWin.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>${nombreArchivo}</title><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;width:100%}@page{size:A4;margin:10mm}@media print{body{width:100%;margin:0;padding:0}.cotizacion{width:100%;max-width:100%}}:root{--gold:#F2B300}.cotizacion{width:100%;max-width:760px;margin:0 auto;font-family:Arial,sans-serif}.cot-header{padding:22px 24px 14px;border-bottom:4px solid #F2B300;display:flex;align-items:flex-start;justify-content:space-between;gap:16px}.cot-logo-txt .big{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;color:#111;letter-spacing:1px;line-height:1}.cot-logo-txt .big span{color:#F2B300}.cot-logo-txt .line{width:100%;height:1.5px;background:#111;margin:3px 0;position:relative}.cot-logo-txt .remo{font-size:8px;letter-spacing:4px;color:#888;text-transform:uppercase;text-align:center;display:block;margin-top:2px}.cot-title-right{text-align:right}.cot-title-right h1{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;color:#111;text-transform:uppercase}.cot-title-right .subtitle{font-size:10px;color:#888;font-style:italic;margin-top:2px}.cot-info-grid{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid #e0e0e0}.cot-cell{padding:10px 16px;border:0.5px solid #e0e0e0;font-size:11px}.cot-cell .cl{color:#999;font-size:9px;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:3px}.cot-cell .cv{font-weight:700;color:#111;font-size:13px}.cot-section{background:#111;color:white;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:2px;text-transform:uppercase;padding:8px 16px;margin-top:2px}.cot-tbl{width:100%;border-collapse:collapse;font-size:11px}.cot-tbl th{background:#F2B300;color:white;padding:8px 12px;text-align:left;font-weight:700;font-size:10px;text-transform:uppercase}.cot-tbl td{padding:8px 12px;border:0.5px solid #e8e8e8;color:#222;vertical-align:top}.cot-tbl tr:nth-child(even) td{background:#f9f9f9}.cot-num-gold{color:#F2B300;font-weight:700;font-family:'Barlow Condensed',sans-serif;font-size:13px}.cot-nota-tbl{width:100%;border-collapse:collapse;font-size:11px}.cot-nota-tbl td{padding:9px 14px;border:0.5px solid #e8e8e8;vertical-align:top}.cot-nota-tbl tr:nth-child(even) td{background:#f9f9f9}.nota-titulo{font-weight:700;color:#111}.nota-desc{font-style:italic;color:#555;line-height:1.5}.cot-resumen{width:100%;border-collapse:collapse;font-size:12px}.cot-resumen th{background:#F2B300;color:white;padding:8px 14px;font-weight:700;font-size:10px;text-transform:uppercase}.cot-resumen th:last-child{text-align:right}.cot-resumen td{padding:9px 14px;border:0.5px solid #e8e8e8;color:#222}.cot-resumen td:last-child{text-align:right;font-weight:600}.cot-resumen .total-row td{background:#111;color:white;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px}.cot-resumen .total-row td:last-child{color:#F2B300}.cot-text-box{padding:12px 16px;font-size:10.5px;color:#333;line-height:1.6;border-top:0.5px solid #e8e8e8}.cot-closing{padding:12px 20px;font-size:9.5px;color:#666;font-style:italic;text-align:center;line-height:1.6;border-top:0.5px solid #e8e8e8}.cot-firmas{display:grid;grid-template-columns:1fr 1fr;padding:20px 30px;gap:30px;border-top:0.5px solid #e8e8e8}.firma-blk{text-align:center}.firma-linea{border-bottom:1px solid #333;margin-bottom:8px;height:36px}.firma-n{font-size:11px;font-weight:700;color:#111}.firma-r{font-size:9.5px;color:#888;font-style:italic}.cot-gold-bar{height:4px;background:#F2B300}.cot-pie{text-align:center;font-size:9px;color:#999;font-style:italic;padding:8px}</style></head><body><div class="cotizacion">${cotHtml}</div><script>window.onload=function(){window.print();}<\/script></body></html>`);
+  printWin.document.close();
+  document.title = titleOriginal;
 }
 
-// ── INICIO ────────────────────────────────────────────────────────────────────
 cargarGuardado();
 asignarNuevaProforma();
 if (trabajos.length === 0) {
   trabajos = [
-    { trabajo: 'Tapichel frontal únicamente', desc: 'Instalación de tapichel frontal según especificaciones del proyecto.' },
-    { trabajo: 'Nivelaciones de piso', desc: 'Nivelación de superficies para garantizar acabados uniformes y de calidad.' },
-    { trabajo: 'Colocación de cerámica — Gym', desc: 'Suministro y colocación de cerámica en área de gimnasio.' },
+    {trabajo:'Tapichel frontal \u00fanicamente',desc:'Instalaci\u00f3n de tapichel frontal seg\u00fan especificaciones del proyecto.'},
+    {trabajo:'Nivelaciones de piso',desc:'Nivelaci\u00f3n de superficies para garantizar acabados uniformes y de calidad.'},
+    {trabajo:'Colocaci\u00f3n de cer\u00e1mica \u2014 Gym',desc:'Suministro y colocaci\u00f3n de cer\u00e1mica en \u00e1rea de gimnasio.'},
   ];
   renderTrabajos();
 }
 if (notas.length === 0) {
   notas = [
-    { titulo: 'Tapicheles', desc: 'Se realizarán con acabado repellado para una presentación limpia y durable.' },
-    { titulo: 'Cielorrazo PVC', desc: 'Instalación con estructura liviana, ideal para espacios interiores.' },
-    { titulo: 'Nivelación de piso', desc: 'Se recomienda el uso de producto autonivelante Laticrete para la entrada del gimnasio.' },
+    {titulo:'Tapicheles',desc:'Se realizar\u00e1n con acabado repellado para una presentaci\u00f3n limpia y durable.'},
+    {titulo:'Cielorrazo PVC',desc:'Instalaci\u00f3n con estructura liviana, ideal para espacios interiores.'},
+    {titulo:'Nivelaci\u00f3n de piso',desc:'Se recomienda el uso de producto autonivelante Laticrete para la entrada del gimnasio.'},
   ];
   renderNotas();
 }
