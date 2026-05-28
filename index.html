@@ -717,10 +717,9 @@ const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 function imprimirConNombre() {
   const cliente = document.getElementById('cliente').value || 'Cliente';
   const nombreArchivo = 'Sojifam - ' + cliente;
-  const titleOriginal = document.title;
   document.title = nombreArchivo;
   window.print();
-  setTimeout(() => { document.title = titleOriginal; }, 1000);
+}
 }
 
 // ── PROFORMA AUTO-INCREMENTO ─────────────────────────────────────────────────
