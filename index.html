@@ -717,9 +717,20 @@ const BIN_URL = `https://api.jsonbin.io/v3/b/${BIN_ID}`;
 function imprimirConNombre() {
   const cliente = document.getElementById('cliente').value || 'Cliente';
   const nombreArchivo = 'Sojifam - ' + cliente;
+  const style = document.createElement('style');
+  style.id = 'print-title-style';
+  style.innerHTML = `@page { size: auto; }`;
+  document.head.appendChild(style);
+  const titleOriginal = document.title;
   document.title = nombreArchivo;
-  window.print();
-}
+  setTimeout(() => {
+    window.print();
+    setTimeout(() => {
+      document.title = titleOriginal;
+      const s = document.getElementById('print-title-style');
+      if (s) s.remove();
+    }, 2000);
+  }, 200);
 }
 
 // ── PROFORMA AUTO-INCREMENTO ─────────────────────────────────────────────────
