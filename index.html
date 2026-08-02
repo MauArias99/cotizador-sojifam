@@ -653,18 +653,34 @@ async function generarPdfDesdeNodo(nodo, nombreArchivo) {
   const usableWidth = pageWidth - margin * 2;
   const usablePageHeight = pageHeight - margin * 2;
   const imgWidth = usableWidth;
-  const imgHeight = canvas.height * imgWidth / canvas.width;
+  const imgHeightNatural = canvas.height * imgWidth / canvas.width;
   const imgData = canvas.toDataURL('image/png');
 
-  let heightLeft = imgHeight;
-  let position = margin;
-  pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
-  heightLeft -= usablePageHeight;
-  while (heightLeft > 0) {
-    position = margin - (imgHeight - heightLeft);
-    pdf.addPage();
-    pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+  // Si el contenido se pasa de una pagina por poco (hasta un 12% de holgura),
+  // se encoge para que quepa completo en una sola hoja, en vez de crear una
+  // segunda pagina casi vacia solo con el sobrante (ej. el bloque de firmas).
+  const TOLERANCIA = 1.12;
+  if (imgHeightNatural <= usablePageHeight * TOLERANCIA) {
+    let finalWidth = imgWidth, finalHeight = imgHeightNatural;
+    if (imgHeightNatural > usablePageHeight) {
+      const factor = usablePageHeight / imgHeightNatural;
+      finalHeight = usablePageHeight;
+      finalWidth = imgWidth * factor;
+    }
+    const offsetX = margin + (imgWidth - finalWidth) / 2;
+    pdf.addImage(imgData, 'PNG', offsetX, margin, finalWidth, finalHeight);
+  } else {
+    // Contenido realmente largo (muchos trabajos/notas): varias paginas a tamano completo
+    let heightLeft = imgHeightNatural;
+    let position = margin;
+    pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeightNatural);
     heightLeft -= usablePageHeight;
+    while (heightLeft > 0) {
+      position = margin - (imgHeightNatural - heightLeft);
+      pdf.addPage();
+      pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeightNatural);
+      heightLeft -= usablePageHeight;
+    }
   }
   pdf.save(nombreArchivo);
 }
