@@ -654,7 +654,6 @@ async function generarPdfDesdeNodo(nodo, nombreArchivo) {
   const usablePageHeight = pageHeight - margin * 2;
   const imgWidth = usableWidth;
   const imgHeightNatural = canvas.height * imgWidth / canvas.width;
-  const imgData = canvas.toDataURL('image/png');
 
   // Si el contenido se pasa de una pagina por poco (hasta un 12% de holgura),
   // se encoge para que quepa completo en una sola hoja, en vez de crear una
@@ -668,18 +667,30 @@ async function generarPdfDesdeNodo(nodo, nombreArchivo) {
       finalWidth = imgWidth * factor;
     }
     const offsetX = margin + (imgWidth - finalWidth) / 2;
-    pdf.addImage(imgData, 'PNG', offsetX, margin, finalWidth, finalHeight);
+    pdf.addImage(canvas.toDataURL('image/png'), 'PNG', offsetX, margin, finalWidth, finalHeight);
   } else {
-    // Contenido realmente largo (muchos trabajos/notas): varias paginas a tamano completo
-    let heightLeft = imgHeightNatural;
-    let position = margin;
-    pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeightNatural);
-    heightLeft -= usablePageHeight;
-    while (heightLeft > 0) {
-      position = margin - (imgHeightNatural - heightLeft);
-      pdf.addPage();
-      pdf.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeightNatural);
-      heightLeft -= usablePageHeight;
+    // Contenido realmente largo (muchos trabajos/notas): se recorta el canvas
+    // en tajadas independientes, una por pagina. No se reutiliza la misma
+    // imagen completa desplazandola (ese metodo podia duplicar contenido
+    // justo en la costura entre paginas, como paso con el resumen economico).
+    const pxPerMm = canvas.width / imgWidth;
+    const pageSlicePx = Math.max(1, Math.floor(usablePageHeight * pxPerMm));
+    let renderedPx = 0;
+    let primera = true;
+    while (renderedPx < canvas.height) {
+      const slicePx = Math.min(pageSlicePx, canvas.height - renderedPx);
+      const sliceCanvas = document.createElement('canvas');
+      sliceCanvas.width = canvas.width;
+      sliceCanvas.height = slicePx;
+      const ctx = sliceCanvas.getContext('2d');
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, sliceCanvas.width, sliceCanvas.height);
+      ctx.drawImage(canvas, 0, renderedPx, canvas.width, slicePx, 0, 0, canvas.width, slicePx);
+      const sliceHeightMm = slicePx / pxPerMm;
+      if (!primera) pdf.addPage();
+      pdf.addImage(sliceCanvas.toDataURL('image/png'), 'PNG', margin, margin, imgWidth, sliceHeightMm);
+      renderedPx += slicePx;
+      primera = false;
     }
   }
   pdf.save(nombreArchivo);
